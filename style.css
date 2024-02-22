@@ -1,0 +1,51 @@
+body {
+    background: linear-gradient(180deg, rgba(59,68,94,1) 45%, rgba(38,38,38,1) 100%);
+}
+
+.MainArea {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
+
+.MainArea > div {
+    padding: 10px;
+    margin: 10px;
+}
+
+.NoteColumns > div {
+    background-color: #0a0f0f;
+    width:150px;
+    height:30px;
+    border:1px solid black;
+}
+
+.MainGameColumn {
+    background-color: #0a0f0f;
+    width: 300px;
+    flex: 0 0 600px;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-template-rows: 94% 6%;
+}
+
+.MainGameColumn > div {
+    text-align: center;
+    font-size: 30px;   
+}
+
+.NoteColumn {
+    background: rgba(38,38,38,1);
+    /*background: linear-gradient(0deg, rgba(8,141,177,1) 0%, rgba(38,38,38,1) 10%);*/
+}
+
+.JudgeColumn {
+    background-color:antiquewhite;
+}
+
+.InformationColumn {
+    background-color: #00aa00;
+    width: 200px;
+    flex:0 0 400px;
+}
+
