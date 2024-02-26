@@ -1,3 +1,9 @@
+:root {
+    --key-color-lightblue: #4bdeff;
+    --key-color-white: #ffffff;
+}
+
+
 body {
     background: linear-gradient(180deg, rgba(59,68,94,1) 45%, rgba(38,38,38,1) 100%);
 }
@@ -13,20 +19,13 @@ body {
     margin: 10px;
 }
 
-.NoteColumns > div {
-    background-color: #0a0f0f;
-    width:150px;
-    height:30px;
-    border:1px solid black;
-}
-
 .MainGameColumn {
     background-color: #0a0f0f;
     width: 300px;
     flex: 0 0 600px;
     display: grid;
     grid-template-columns: auto auto auto auto;
-    grid-template-rows: 94% 6%;
+    grid-template-rows: 10% 80% 4% 6%;
 }
 
 .MainGameColumn > div {
@@ -39,8 +38,36 @@ body {
     /*background: linear-gradient(0deg, rgba(8,141,177,1) 0%, rgba(38,38,38,1) 10%);*/
 }
 
+.notes {
+    position: absolute;
+    width:150px;
+    height: 8%;
+    
+}
+
+.ColumnA > div, .ColumnD > div{
+    background: var(--key-color-lightblue);
+}
+
+.ColumnB > div, .ColumnC > div{
+    background: var(--key-color-white);
+}
+
+.UpHideBar {
+    grid-column: 1 / 5;
+    background-color: black;
+    z-index: 2;
+}
+
+.JudgeBar {
+    grid-column: 1 / 5;
+    background-color: rgb(106, 0, 0);
+    z-index: 2;
+}
+
 .JudgeColumn {
     background-color:antiquewhite;
+    z-index: 2;
 }
 
 .InformationColumn {
@@ -49,3 +76,13 @@ body {
     flex:0 0 400px;
 }
 
+@keyframes moveDown {
+    0% {translate: 0px -110%; opacity: 1;}
+    100% {translate: 0px 960%; opacity: 1;}
+    
+}
+
+
+
+/* remember to use specific class to denote the notes, while the original divs should not have the inherited css properties
+this allows for edits that can potentially hide away the problems of appearing notes aka divs at upper z index */
