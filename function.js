@@ -4,15 +4,127 @@ const columns = Array.from(document.querySelectorAll(".NoteColumn"));
 
 const rootVar = getComputedStyle(document.querySelector(":root"));
 
-const tempChartData = [[1, 1, 0, 0],
+const audioContext = new AudioContext();
+const audio = new Audio("./music/First_Choice.mp3");
+
+const source = audioContext.createMediaElementSource(audio);
+
+const volume = audioContext.createGain();
+volume.gain.value = 0.05;
+
+source.connect(volume);
+volume.connect(audioContext.destination);
+
+console.log(audioContext);
+
+const tempChartData = [[1, 0, 0, 0], //1
                        [0, 0, 0, 0], 
-                       [1, 1, 0, 0],
+                       [0, 1, 0, 0],
                        [0, 0, 0, 0],
-                       [1, 1, 0, 1],
-                       [0, 0, 1, 0], 
+                       [0, 0, 1, 0], //2
+                       [0, 1, 0, 0], 
+                       [1, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 1], //3
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
                        [0, 1, 0, 0],
                        [0, 0, 1, 0],
-                       [1, 1, 0, 1]];
+                       [0, 0, 0, 1],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [1, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 1, 0, 0],
+                       [1, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 1],
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 1],
+                       [1, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 1],
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 1],
+                       [0, 0, 0, 0],
+                       [1, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 1, 0, 0],
+                       [1, 0, 0, 0],
+                       [0, 1, 0, 1],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 1],
+                       [0, 0, 0, 0],
+                       [1, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 1, 0],
+                       [1, 0, 0, 1],
+                       [0, 0, 0, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 1, 0],
+                       [1, 0, 0, 1], //begin
+                       [0, 0, 0, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 1],
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 1],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 0],
+                       [0, 0, 0, 0],
+                       [0, 1, 0, 0],];
 
 
 
@@ -44,12 +156,23 @@ window.addEventListener("keyup", function (event) {
     }
 })
 
+function noteMiss() {
+    columns.forEach((column) => {
+        column.addEventListener("animationend", (event) => {
+            column.removeChild(event.target);
+        })
+    })
+}
+
+noteMiss();
+
 function processHit(lane) {
     lane.removeChild(lane.firstChild);
 }
 
 function generateLaneNotes(chartData) {
-    let delayMultiplier = 0.08;
+    let delayMultiplier = 15/150;  //divided by bpm, need to implement later
+    console.log(audioContext.outputLatency);
     for (i = 0; i < chartData.length; i++) {
         for (j = 0; j < 4; j++) {
             if (chartData[i][j] == 1) {
@@ -58,19 +181,41 @@ function generateLaneNotes(chartData) {
                 tempNote.style.animationName = "moveDown";
                 tempNote.style.animationTimingFunction = "linear";
                 tempNote.style.animationDuration = "0.8s";
-                tempNote.style.animationDelay = delayMultiplier * i + "s"; // for debugging
+            
+                tempNote.style.animationDelay = audioContext.outputLatency + 0.45 + delayMultiplier * i + "s"; // for debugging
                 tempNote.style.opacity = 0;
-                tempNote.style.animationPlayState = "running";
-
+                tempNote.style.animationPlayState = "paused";
                 columns[j].appendChild(tempNote);
             }
         }
     }
 }
 
+//generateLaneNotes(tempChartData);
 
 
-generateLaneNotes(tempChartData);
+function playSong() {
+    if (audioContext.state === "suspended") {
+        setTimeout(function() {
+            audioContext.resume();
+            audio.play();
+            console.log(audioContext);
+        }, 1000);
+        generateLaneNotes(tempChartData);
+        document.querySelectorAll(".notes").forEach(function(note) {
+            note.style.animationPlayState = "running";
+        })
+    }
+
+}
+
+//TODO add canplaythrough
+
+
+
+//use getcomputedstyle and time to determine judge
 //if a note is not within a certain ms of window (aka ms * distance between the perfect judge), then do nothing
 //else, we perform a judgement on the note
-
+//next up on the todo?
+// add music
+// sync music - is is better to hardcode bpm or use something to detect bpm? perhaps web audio api
