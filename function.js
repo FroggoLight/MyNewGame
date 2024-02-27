@@ -1,8 +1,10 @@
 const validKeys = ["z", "x", "c", "v"];
-
 const columns = Array.from(document.querySelectorAll(".NoteColumn"));
-
 const rootVar = getComputedStyle(document.querySelector(":root"));
+
+let startTime;
+const delayConstant = 0.45;
+let personalOffset = 0.3;
 
 const audioContext = new AudioContext();
 const audio = new Audio("./music/First_Choice.mp3");
@@ -164,15 +166,24 @@ function noteMiss() {
     })
 }
 
+
+//to be initialized at start with some other things
 noteMiss();
 
 function processHit(lane) {
-    lane.removeChild(lane.firstChild);
+    console.log(getComputedStyle(lane.firstChild).animationDelay);
+    console.log(Date.now() - startTime);
+    let noteDelayTime = parseFloat(getComputedStyle(lane.firstChild).animationDelay) * 1000;
+    let hitTimeFrame = Math.abs(noteDelayTime - (Date.now() - startTime - (delayConstant * 1000) - (personalOffset * 1000)));
+    console.log(hitTimeFrame);
+    if (hitTimeFrame < 200) {
+        lane.removeChild(lane.firstChild);
+    }
 }
 
 function generateLaneNotes(chartData) {
     let delayMultiplier = 15/150;  //divided by bpm, need to implement later
-    console.log(audioContext.outputLatency);
+    console.log(audioContext.outputLatency + delayConstant);
     for (i = 0; i < chartData.length; i++) {
         for (j = 0; j < 4; j++) {
             if (chartData[i][j] == 1) {
@@ -180,9 +191,8 @@ function generateLaneNotes(chartData) {
                 tempNote.classList.add("notes");
                 tempNote.style.animationName = "moveDown";
                 tempNote.style.animationTimingFunction = "linear";
-                tempNote.style.animationDuration = "0.8s";
-            
-                tempNote.style.animationDelay = audioContext.outputLatency + 0.45 + delayMultiplier * i + "s"; // for debugging
+                tempNote.style.animationDuration = "0.8s";      
+                tempNote.style.animationDelay = audioContext.outputLatency + delayConstant + delayMultiplier * i + "s"; // for debugging
                 tempNote.style.opacity = 0;
                 tempNote.style.animationPlayState = "paused";
                 columns[j].appendChild(tempNote);
@@ -201,6 +211,7 @@ function playSong() {
             audio.play();
             console.log(audioContext);
         }, 1000);
+        startTime = Date.now();
         generateLaneNotes(tempChartData);
         document.querySelectorAll(".notes").forEach(function(note) {
             note.style.animationPlayState = "running";
