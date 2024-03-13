@@ -6,17 +6,21 @@
 
 body {
     background: linear-gradient(180deg, rgba(59,68,94,1) 45%, rgba(38,38,38,1) 100%);
+    margin: 0px;
+    overflow-y: hidden;
 }
 
 .MainArea {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     height: 100vh;
 }
 
 .MainArea > div {
-    padding: 10px;
-    margin: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .MainGameColumn {
@@ -25,7 +29,7 @@ body {
     flex: 0 0 600px;
     display: grid;
     grid-template-columns: auto auto auto auto;
-    grid-template-rows: 10% 78% 4% 8%;
+    grid-template-rows: 10% 90% 20px;
 }
 
 .MainGameColumn > div {
@@ -34,14 +38,14 @@ body {
 }
 
 .NoteColumn {
-    background: rgba(38,38,38,1);
+    background: rgb(0, 0, 0);
     /*background: linear-gradient(0deg, rgba(8,141,177,1) 0%, rgba(38,38,38,1) 10%);*/
 }
 
 .notes {
     position: absolute;
     width:150px;
-    height: 8%;
+    height: max(6%, 60px); /*might use css function to determine best max size*/
     
 }
 
@@ -56,30 +60,38 @@ body {
 .UpHideBar {
     grid-column: 1 / 5;
     background-color: black;
-    z-index: 2;
+    z-index: 3;
+    
 }
 
 .JudgeBar {
     grid-column: 1 / 5;
-    background-color: rgb(106, 0, 0);
-    z-index: 2;
+    background-color: rgb(172, 227, 254);
+    position: absolute;
+    z-index: -0;
+    width: 600px;
+    height: 40px;
+    translate: 0px 90vh;
+    box-shadow: 0px 25px 10px -15px rgba(0,0,0,1) inset,
+    0px -25px 10px -15px rgba(0,0,0,1) inset;
 }
 
-.JudgeColumn {
-    background-color:antiquewhite;
-    z-index: 2;
-}
+
+
 
 .InformationColumn {
     background-color: #00aa00;
     width: 200px;
     flex:0 0 400px;
+    display: flex;
+    flex-direction: column;
+    font-size: 2rem;
 }
 
 @keyframes moveDown {
     0% {translate: 0px -110%; opacity: 1;}
-    100% {translate: 0px 960%; opacity: 1;}
-    
+    100% {translate: 0px 120vh; opacity: 1;}
+
 }
 
 

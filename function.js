@@ -1,10 +1,21 @@
 const validKeys = ["z", "x", "c", "v"];
 const columns = Array.from(document.querySelectorAll(".NoteColumn"));
+
 const rootVar = getComputedStyle(document.querySelector(":root"));
+
+let totalScore = 0;
+const scoreboard = document.querySelector(".Scoreboard");
+
+let currentAccuracy = 0;
+const accuracyboard = document.querySelector(".Accuracy");
+
+let totalNotesProcessed = 0;
+
+let accumulatedJudge = [0, 0, 0, 0, 0, 0];
 
 let startTime;
 const delayConstant = 0.45;
-let personalOffset = 0.3;
+let personalOffset = 0.1;
 
 const audioContext = new AudioContext();
 const audio = new Audio("./music/First_Choice.mp3");
@@ -397,6 +408,7 @@ const tempChartData = [[1, 0, 0, 0], //1, additionaly this is why this needs to 
                        [0, 1, 0, 0],
                        [0, 0, 0, 1],
                        [0, 0, 1, 0],
+                       [0, 1, 0, 0],
                        [1, 0, 0, 0],
                        [0, 0, 1, 0],
                        [0, 1, 0, 0],
@@ -592,6 +604,8 @@ const tempChartData = [[1, 0, 0, 0], //1, additionaly this is why this needs to 
                        [1, 1, 0, 0],
                        [0, 0, 1, 1],
                        [1, 1, 0, 0],
+                       [0, 0, 1, 1],
+                       [1, 1, 0, 0],
                        [0, 0, 1, 1],//vvv is end
                        [1, 1, 0, 0],
                        [0, 0, 0, 0],
@@ -685,7 +699,7 @@ const tempChartData = [[1, 0, 0, 0], //1, additionaly this is why this needs to 
                        [0, 0, 0, 0],
                        [0, 0, 1, 0],
                        [0, 0, 0, 1],
-                       [0, 0, 1, 0],
+                       [1, 0, 1, 0],
                        [0, 1, 0, 0],
                        [0, 0, 1, 0],
                        [0, 0, 0, 0],
@@ -724,7 +738,6 @@ const tempChartData = [[1, 0, 0, 0], //1, additionaly this is why this needs to 
                        [1, 1, 0, 1]];
 
 
-
 window.addEventListener("keydown", function (event) {
     let keyPressed = event.key;
     if (validKeys.includes(keyPressed)) {
@@ -732,7 +745,7 @@ window.addEventListener("keydown", function (event) {
             return; //damn im so smart from using google
         } 
         let keyIndex = validKeys.indexOf(keyPressed);
-        columns[keyIndex].style.background = "rgba(55,55,55,1)";
+        //columns[keyIndex].style.background = "rgba(38,38,38,1)";
         if (columns[keyIndex].firstChild != null) {
             processHit(columns[keyIndex]);
         }
@@ -747,33 +760,91 @@ window.addEventListener("keyup", function (event) {
     let keyPressed = event.key;
     if (validKeys.includes(keyPressed)) {
         let keyIndex = validKeys.indexOf(keyPressed);
-        columns[keyIndex].style.background = "rgba(38,38,38,1)";
+        columns[keyIndex].style.background = "rgb(0, 0, 0)";
         //on the press see if there are any notes to judge
         //console.log("a proper key was hit");
     }
 })
 
-function noteMiss() {
+function noteMissListener() {
     columns.forEach((column) => {
-        column.addEventListener("animationend", (event) => { //use settimeout to make it feel better
+        column.addEventListener("animationend", (event) => { //use settimeout to make it feel better, actually scrap that
             column.removeChild(event.target);
+            updateDisplay("miss", 0, 0);
         })
     })
 }
 
 
 //to be initialized at start with some other things
-noteMiss();
+noteMissListener();
 
 function processHit(lane) {
     console.log(getComputedStyle(lane.firstChild).animationDelay);
-    console.log(Date.now() - startTime);
     let noteDelayTime = parseFloat(getComputedStyle(lane.firstChild).animationDelay) * 1000;
     let hitTimeFrame = noteDelayTime - (Date.now() - startTime - (delayConstant * 1000) - (personalOffset * 1000));
     console.log(hitTimeFrame);
-    if (Math.abs(hitTimeFrame) < 200) {
+    if (Math.abs(hitTimeFrame) < 150) {
+        calculateHitScore(Math.abs(hitTimeFrame));
+        //call the judge first or second after this?
         lane.removeChild(lane.firstChild);
     }
+}
+
+function calculateHitScore(timeFrame) {
+    //if between 120 - 150 miss 0
+    //if between 100 - 120 bad 10 
+    //if between 60 - 100 ok 30
+    //if between 40 - 60 good 50
+    //if between 20 - 40 great 70
+    //if between 0 - 20 perfect 100
+
+    if ((timeFrame > 120) && (timeFrame <= 150)) {
+        updateDisplay("miss", 0, 0);
+    }
+    else if ((timeFrame > 100)) {
+        updateDisplay("bad", 100, 10);
+    }
+    else if ((timeFrame > 60)) {
+        updateDisplay("ok", 200, 30);
+    }
+    else if ((timeFrame > 40)) {
+        updateDisplay("good", 400, 50);
+    }
+    else if ((timeFrame > 20)) {
+        updateDisplay("great", 700, 70);
+    }
+    else if ((timeFrame >= 0)) {
+        updateDisplay("perfect", 1000, 100);
+    }
+    else {
+        console.log("something went wrong I suppose");
+    }
+
+}
+
+function updateDisplay(judge, score, accuracy) {
+    updateScore(score);
+    updateAccuracy(accuracy);
+    updateCurrentJudge(judge);
+    //will use the string to update
+    //add the score to total
+}
+
+function updateScore(score) {
+    totalScore += score;
+    scoreboard.textContent = "Score: " + totalScore;
+}
+
+function updateAccuracy(accuracy) {
+    totalNotesProcessed += 1;
+    currentAccuracy += accuracy;
+    accuracyPercentage = (Math.round((currentAccuracy / totalNotesProcessed) * 100) / 100);
+    accuracyboard.textContent = accuracyPercentage + "%";
+}
+
+function updateCurrentJudge(judge) {
+    return;
 }
 
 function generateLaneNotes(chartData) {
@@ -786,9 +857,10 @@ function generateLaneNotes(chartData) {
                 tempNote.classList.add("notes");
                 tempNote.style.animationName = "moveDown";
                 tempNote.style.animationTimingFunction = "linear";
-                tempNote.style.animationDuration = "0.7s";      
-                tempNote.style.animationDelay = audioContext.outputLatency + delayConstant + delayMultiplier * i + "s"; // for debugging
+                tempNote.style.animationDuration = "0.8s";      
+                tempNote.style.animationDelay = audioContext.outputLatency + delayConstant + 0.2 + delayMultiplier * i + "s"; // for debugging
                 tempNote.style.opacity = 0;
+                tempNote.style.zIndex = 2;
                 tempNote.style.animationPlayState = "paused";
                 columns[j].appendChild(tempNote);
             }
