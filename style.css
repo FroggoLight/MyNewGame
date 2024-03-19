@@ -61,8 +61,26 @@ body {
     grid-column: 1 / 5;
     background-color: black;
     z-index: 3;
-    
+    position: relative;
 }
+
+.HitAccuracyDisplay {
+    height: 20px;
+    background-color: transparent;
+    translate: 0px 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.JudgeAccuracy {
+    height: 20px;
+    width: 2px;
+    background-color: white;
+    position: absolute;
+    animation-name: judgeFadeOut;
+}
+
 
 .JudgeBar {
     grid-column: 1 / 5;
@@ -94,6 +112,11 @@ body {
 
 }
 
+@keyframes judgeFadeOut {
+    0% {opacity: 1;}
+    50% {opacity: 1;}
+    100% {opacity: 0;}
+}
 
 
 /* remember to use specific class to denote the notes, while the original divs should not have the inherited css properties

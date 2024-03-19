@@ -13,6 +13,19 @@ let totalNotesProcessed = 0;
 
 let accumulatedJudge = [0, 0, 0, 0, 0, 0];
 
+const hitAccuracyArea = document.querySelector(".HitAccuracyDisplay");
+hitAccuracyArea.addEventListener("animationend", (event) => {
+    hitAccuracyArea.removeChild(event.target);
+})
+console.log(hitAccuracyArea);
+
+/*
+let tempthing = document.createElement("div");
+tempthing.classList.add("JudgeAccuracy");
+tempthing.style.height = "";
+hitAccuracyArea.appendChild(tempthing);
+*/
+
 let startTime;
 const delayConstant = 0.45;
 let personalOffset = 0.1;
@@ -30,7 +43,7 @@ volume.connect(audioContext.destination);
 
 console.log(audioContext);
 
-const tempChartData = [[1, 0, 0, 0], //1, additionaly this is why this needs to be stored in another file or smt
+const tempChartData = [[1, 0, 0, 0], //1, additionaly this is why this needs to be stored in another file or smt most likely a json file
                        [0, 0, 0, 0], 
                        [0, 1, 0, 0],
                        [0, 0, 0, 0],
@@ -738,6 +751,8 @@ const tempChartData = [[1, 0, 0, 0], //1, additionaly this is why this needs to 
                        [1, 1, 0, 1]];
 
 
+//todo: put window event listeners into function that can be called
+
 window.addEventListener("keydown", function (event) {
     let keyPressed = event.key;
     if (validKeys.includes(keyPressed)) {
@@ -785,8 +800,7 @@ function processHit(lane) {
     let hitTimeFrame = noteDelayTime - (Date.now() - startTime - (delayConstant * 1000) - (personalOffset * 1000));
     console.log(hitTimeFrame);
     if (Math.abs(hitTimeFrame) < 150) {
-        calculateHitScore(Math.abs(hitTimeFrame));
-        //call the judge first or second after this?
+        calculateHitScore(hitTimeFrame);
         lane.removeChild(lane.firstChild);
     }
 }
@@ -799,23 +813,26 @@ function calculateHitScore(timeFrame) {
     //if between 20 - 40 great 70
     //if between 0 - 20 perfect 100
 
-    if ((timeFrame > 120) && (timeFrame <= 150)) {
-        updateDisplay("miss", 0, 0);
+    displayHitAccuracy(timeFrame);
+
+    const trueFrame = Math.abs(timeFrame);
+    if ((trueFrame > 120) && (trueFrame <= 150)) {
+        updateDisplay(5, 0, 0);
     }
-    else if ((timeFrame > 100)) {
-        updateDisplay("bad", 100, 10);
+    else if ((trueFrame > 100)) {
+        updateDisplay(4, 100, 10);
     }
-    else if ((timeFrame > 60)) {
-        updateDisplay("ok", 200, 30);
+    else if ((trueFrame > 60)) {
+        updateDisplay(3, 200, 30);
     }
-    else if ((timeFrame > 40)) {
-        updateDisplay("good", 400, 50);
+    else if ((trueFrame > 40)) {
+        updateDisplay(2, 400, 50);
     }
-    else if ((timeFrame > 20)) {
-        updateDisplay("great", 700, 70);
+    else if ((trueFrame > 20)) {
+        updateDisplay(1, 700, 70);
     }
-    else if ((timeFrame >= 0)) {
-        updateDisplay("perfect", 1000, 100);
+    else if ((trueFrame >= 0)) {
+        updateDisplay(0, 1000, 100);
     }
     else {
         console.log("something went wrong I suppose");
@@ -823,10 +840,20 @@ function calculateHitScore(timeFrame) {
 
 }
 
-function updateDisplay(judge, score, accuracy) {
+function displayHitAccuracy(timeFrame) {
+    let hitAccuracy = document.createElement("div");
+    hitAccuracy.classList.add("JudgeAccuracy");
+    hitAccuracy.style.animationTimingFunction = "linear";
+    hitAccuracy.style.animationDuration = "3.0s";
+    hitAccuracy.style.animationPlayState = "running";
+    hitAccuracy.style.translate = (timeFrame * 2) + "px";
+    hitAccuracyArea.appendChild(hitAccuracy);
+}
+
+function updateDisplay(judgeIndex, score, accuracy) {
     updateScore(score);
     updateAccuracy(accuracy);
-    updateCurrentJudge(judge);
+    updateCurrentJudge(judgeIndex);
     //will use the string to update
     //add the score to total
 }
@@ -843,7 +870,7 @@ function updateAccuracy(accuracy) {
     accuracyboard.textContent = accuracyPercentage + "%";
 }
 
-function updateCurrentJudge(judge) {
+function updateCurrentJudge(judgeIndex) {
     return;
 }
 
