@@ -816,19 +816,19 @@ function calculateHitScore(timeFrame) {
     displayHitAccuracy(timeFrame);
 
     const trueFrame = Math.abs(timeFrame);
-    if ((trueFrame > 120) && (trueFrame <= 150)) {
+    if ((trueFrame > 140) && (trueFrame <= 150)) {
         updateDisplay(5, 0, 0);
     }
-    else if ((trueFrame > 100)) {
+    else if ((trueFrame > 120)) {
         updateDisplay(4, 100, 10);
     }
-    else if ((trueFrame > 60)) {
+    else if ((trueFrame > 100)) {
         updateDisplay(3, 200, 30);
     }
-    else if ((trueFrame > 40)) {
+    else if ((trueFrame > 70)) {
         updateDisplay(2, 400, 50);
     }
-    else if ((trueFrame > 20)) {
+    else if ((trueFrame > 40)) {
         updateDisplay(1, 700, 70);
     }
     else if ((trueFrame >= 0)) {
@@ -841,12 +841,15 @@ function calculateHitScore(timeFrame) {
 }
 
 function displayHitAccuracy(timeFrame) {
+    let accuracyColor = (150 - Math.abs(timeFrame)) * 0.75;
     let hitAccuracy = document.createElement("div");
     hitAccuracy.classList.add("JudgeAccuracy");
     hitAccuracy.style.animationTimingFunction = "linear";
     hitAccuracy.style.animationDuration = "3.0s";
     hitAccuracy.style.animationPlayState = "running";
-    hitAccuracy.style.translate = (timeFrame * 2) + "px";
+    hitAccuracy.style.backgroundColor = "hsl(" + accuracyColor + ", 100%, 50%)";
+    console.log(hitAccuracy.style.backgroundColor);
+    hitAccuracy.style.translate = -(timeFrame * 1.5) + "px";
     hitAccuracyArea.appendChild(hitAccuracy);
 }
 
